@@ -1,8 +1,11 @@
 /*
   MsTimer2.h - Using timer2 with 1ms resolution
   Javier Valencia <javiervalencia80@gmail.com>
+
+  https://github.com/PaulStoffregen/MsTimer2
   
   History:
+	6/Jun/14  - V0.7 added support for Teensy 3.0 & 3.1
   	29/Dec/11 - V0.6 added support for ATmega32u4, AT90USB646, AT90USB1286 (paul@pjrc.com)
 		some improvements added by Bill Perry
 		note: uses timer4 on Atmega32u4
@@ -38,6 +41,9 @@ void (*MsTimer2::func)();
 volatile unsigned long MsTimer2::count;
 volatile char MsTimer2::overflowing;
 volatile unsigned int MsTimer2::tcnt2;
+#if defined(__arm__) && defined(TEENSYDUINO)
+static IntervalTimer itimer;
+#endif
 
 void MsTimer2::set(unsigned long ms, void (*f)()) {
 	float prescaler = 0.0;
@@ -137,6 +143,8 @@ void MsTimer2::set(unsigned long ms, void (*f)()) {
 	tcnt2 = (int)((float)F_CPU * 0.001 / prescaler) - 1;
 	OCR4C = tcnt2;
 	return;
+#elif defined(__arm__) && defined(TEENSYDUINO)
+	// nothing needed here
 #else
 #error Unsupported CPU type
 #endif
@@ -160,6 +168,8 @@ void MsTimer2::start() {
 	TIFR4 = (1<<TOV4);
 	TCNT4 = 0;
 	TIMSK4 = (1<<TOIE4);
+#elif defined(__arm__) && defined(TEENSYDUINO)
+	itimer.begin(MsTimer2::_overflow, 1000);
 #endif
 }
 
@@ -172,6 +182,8 @@ void MsTimer2::stop() {
 	TIMSK &= ~(1<<TOIE2);
 #elif defined (__AVR_ATmega32U4__)
 	TIMSK4 = 0;
+#elif defined(__arm__) && defined(TEENSYDUINO)
+	itimer.end();
 #endif
 }
 
@@ -187,6 +199,7 @@ void MsTimer2::_overflow() {
 	}
 }
 
+#if defined (__AVR__)
 #if defined (__AVR_ATmega32U4__)
 ISR(TIMER4_OVF_vect) {
 #else
@@ -203,4 +216,5 @@ ISR(TIMER2_OVF_vect) {
 #endif
 	MsTimer2::_overflow();
 }
+#endif // AVR
 

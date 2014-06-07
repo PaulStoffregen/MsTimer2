@@ -3,6 +3,8 @@
 
 #ifdef __AVR__
 #include <avr/interrupt.h>
+#elif defined(__arm__) && defined(TEENSYDUINO)
+#include <Arduino.h>
 #else
 #error MsTimer2 library only works on AVR architecture
 #endif
