@@ -1,5 +1,6 @@
 {
   "name": "MsTimer2",
+  "version": "1.1",
   "keywords": "timer, callback",
   "description": "MsTimer2 is a small and very easy to use library to interface Timer2 with humans. It's called MsTimer2 because it \"hardcodes\" a resolution of 1 millisecond on timer2.",
   "repository": {
