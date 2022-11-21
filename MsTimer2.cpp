@@ -46,8 +46,8 @@ static IntervalTimer itimer;
 #endif
 
 void MsTimer2::set(unsigned long ms, void (*f)()) {
-	float prescaler = 0.0;
-	
+//	float prescaler = 0.0;
+        int prescaler=0;	
 	if (ms == 0)
 		msecs = 1;
 	else
@@ -65,15 +65,18 @@ void MsTimer2::set(unsigned long ms, void (*f)()) {
 	if ((F_CPU >= 1000000UL) && (F_CPU <= 16000000UL)) {	// prescaler set to 64
 		TCCR2B |= (1<<CS22);
 		TCCR2B &= ~((1<<CS21) | (1<<CS20));
-		prescaler = 64.0;
+	//	prescaler = 64.0;
+	        prescaler = 64;
 	} else if (F_CPU < 1000000UL) {	// prescaler set to 8
 		TCCR2B |= (1<<CS21);
 		TCCR2B &= ~((1<<CS22) | (1<<CS20));
-		prescaler = 8.0;
+	//	prescaler = 8.0;
+	        precaler = 8;
 	} else { // F_CPU > 16Mhz, prescaler set to 128
 		TCCR2B |= ((1<<CS22) | (1<<CS20));
 		TCCR2B &= ~(1<<CS21);
-		prescaler = 128.0;
+	//	prescaler = 128.0;
+	        prescaler = 128;
 	}
 #elif defined (__AVR_ATmega8__)
 	TIMSK &= ~(1<<TOIE2);
@@ -84,15 +87,18 @@ void MsTimer2::set(unsigned long ms, void (*f)()) {
 	if ((F_CPU >= 1000000UL) && (F_CPU <= 16000000UL)) {	// prescaler set to 64
 		TCCR2 |= (1<<CS22);
 		TCCR2 &= ~((1<<CS21) | (1<<CS20));
-		prescaler = 64.0;
+	//	prescaler = 64.0;
+	        prescaler = 64;
 	} else if (F_CPU < 1000000UL) {	// prescaler set to 8
 		TCCR2 |= (1<<CS21);
 		TCCR2 &= ~((1<<CS22) | (1<<CS20));
-		prescaler = 8.0;
+	//	prescaler = 8.0;
+	        prescaler = 8;
 	} else { // F_CPU > 16Mhz, prescaler set to 128
 		TCCR2 |= ((1<<CS22) && (1<<CS20));
 		TCCR2 &= ~(1<<CS21);
-		prescaler = 128.0;
+	//	prescaler = 128.0;
+	        prescaler = 128;
 	}
 #elif defined (__AVR_ATmega128__)
 	TIMSK &= ~(1<<TOIE2);
@@ -102,15 +108,18 @@ void MsTimer2::set(unsigned long ms, void (*f)()) {
 	if ((F_CPU >= 1000000UL) && (F_CPU <= 16000000UL)) {	// prescaler set to 64
 		TCCR2 |= ((1<<CS21) | (1<<CS20));
 		TCCR2 &= ~(1<<CS22);
-		prescaler = 64.0;
+	//	prescaler = 64.0;
+	        presaler = 64;
 	} else if (F_CPU < 1000000UL) {	// prescaler set to 8
 		TCCR2 |= (1<<CS21);
 		TCCR2 &= ~((1<<CS22) | (1<<CS20));
-		prescaler = 8.0;
+	//	prescaler = 8.0;
+	        prescaler = 8;
 	} else { // F_CPU > 16Mhz, prescaler set to 256
 		TCCR2 |= (1<<CS22);
 		TCCR2 &= ~((1<<CS21) | (1<<CS20));
-		prescaler = 256.0;
+	//	prescaler = 256.0;
+	        prescaler = 256;
 	}
 #elif defined (__AVR_ATmega32U4__)
 	TCCR4B = 0;
@@ -120,27 +129,36 @@ void MsTimer2::set(unsigned long ms, void (*f)()) {
 	TCCR4E = 0;
 	if (F_CPU >= 16000000L) {
 		TCCR4B = (1<<CS43) | (1<<PSR4);
-		prescaler = 128.0;
+	//	prescaler = 128.0;
+	        prescaler=128;
 	} else if (F_CPU >= 8000000L) {
 		TCCR4B = (1<<CS42) | (1<<CS41) | (1<<CS40) | (1<<PSR4);
-		prescaler = 64.0;
+	//	prescaler = 64.0;
+	        prescaler=64;
 	} else if (F_CPU >= 4000000L) {
 		TCCR4B = (1<<CS42) | (1<<CS41) | (1<<PSR4);
-		prescaler = 32.0;
+	//	prescaler = 32.0;
+	        prescaler=32;
 	} else if (F_CPU >= 2000000L) {
 		TCCR4B = (1<<CS42) | (1<<CS40) | (1<<PSR4);
-		prescaler = 16.0;
+	//	prescaler = 16.0;
+	        prescaler = 16;
 	} else if (F_CPU >= 1000000L) {
 		TCCR4B = (1<<CS42) | (1<<PSR4);
-		prescaler = 8.0;
+	//	prescaler = 8.0;
+	        prescaler = 8;
+	        
 	} else if (F_CPU >= 500000L) {
 		TCCR4B = (1<<CS41) | (1<<CS40) | (1<<PSR4);
-		prescaler = 4.0;
+	//	prescaler = 4.0;
+	        prescaler = 4;
 	} else {
 		TCCR4B = (1<<CS41) | (1<<PSR4);
-		prescaler = 2.0;
+	//	prescaler = 2.0;
+	        prescaler = 2;
 	}
-	tcnt2 = (int)((float)F_CPU * 0.001 / prescaler) - 1;
+	//tcnt2 = (int)((float)F_CPU * 0.001 /prescaler) - 1;
+	tcnt2 = (int)((float)F_CPU * 0.001 /(float)prescaler) - 1;
 	OCR4C = tcnt2;
 	return;
 #elif defined(__arm__) && defined(TEENSYDUINO)
@@ -149,7 +167,8 @@ void MsTimer2::set(unsigned long ms, void (*f)()) {
 #error Unsupported CPU type
 #endif
 
-	tcnt2 = 256 - (int)((float)F_CPU * 0.001 / prescaler);
+//	tcnt2 = 256 - (int)((float)F_CPU * 0.001 / prescaler);
+	tcnt2 = 256 - (int)((float)F_CPU * 0.001 /(float) prescaler);
 }
 
 void MsTimer2::start() {
