@@ -55,7 +55,7 @@ void MsTimer2::set(unsigned long ms, void (*f)()) {
 		
 	func = f;
 
-#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__)
 	TIMSK2 &= ~(1<<TOIE2);
 	TCCR2A &= ~((1<<WGM21) | (1<<WGM20));
 	TCCR2B &= ~(1<<WGM22);
@@ -155,7 +155,7 @@ void MsTimer2::set(unsigned long ms, void (*f)()) {
 void MsTimer2::start() {
 	count = 0;
 	overflowing = 0;
-#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__)
 	TCNT2 = tcnt2;
 	TIMSK2 |= (1<<TOIE2);
 #elif defined (__AVR_ATmega128__)
@@ -174,7 +174,7 @@ void MsTimer2::start() {
 }
 
 void MsTimer2::stop() {
-#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__)
 	TIMSK2 &= ~(1<<TOIE2);
 #elif defined (__AVR_ATmega128__)
 	TIMSK &= ~(1<<TOIE2);
@@ -205,7 +205,7 @@ ISR(TIMER4_OVF_vect) {
 #else
 ISR(TIMER2_OVF_vect) {
 #endif
-#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__)
 	TCNT2 = MsTimer2::tcnt2;
 #elif defined (__AVR_ATmega128__)
 	TCNT2 = MsTimer2::tcnt2;
